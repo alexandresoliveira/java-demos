@@ -34,10 +34,16 @@ public class User extends Base {
 
   @NotBlank
   @Email
+  @Column(name = "email", length = 30, nullable = false)
   private String email;
 
   @NotBlank
   @Size(min = 3, max = 100)
-  @Column(name = "full_name")
+  @Column(name = "full_name", length = 100, nullable = false)
   private String fullName;
+
+  public User(String email, String fullName) {
+    this.email = email;
+    this.fullName = fullName;
+  }
 }

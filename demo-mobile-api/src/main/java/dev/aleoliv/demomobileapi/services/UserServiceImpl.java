@@ -11,20 +11,23 @@ import dev.aleoliv.demomobileapi.exceptions.UserNotFoundException;
 import dev.aleoliv.demomobileapi.models.User;
 import dev.aleoliv.demomobileapi.repositories.UserRepository;
 
-@Service
-public class UserService {
+@Service("userService")
+public class UserServiceImpl implements UserService {
 
   @Autowired
   UserRepository userRepository;
 
+  @Override
   public List<User> all() {
     return userRepository.findAll();
   }
 
+  @Override
   public List<User> all(Map<String, Object> params) {
     return null;
   }
 
+  @Override
   public User find(Long id) throws UserNotFoundException {
     Optional<User> optionalUser = userRepository.findById(id);
     if (optionalUser.isPresent()) {
@@ -33,19 +36,22 @@ public class UserService {
     throw new UserNotFoundException();
   }
 
+  @Override
   public User save(User user) {
     return userRepository.saveAndFlush(user);
   }
 
+  @Override
   public User update(User user) {
     return userRepository.saveAndFlush(user);
   }
 
+  @Override
   public void delete(Long id) throws UserNotFoundException {
     Optional<User> optionalUser = userRepository.findById(id);
-    if (optionalUser.isPresent()) {
-      userRepository.delete(optionalUser.get());
+    if (!optionalUser.isPresent()) {
+      throw new UserNotFoundException();
     }
-    throw new UserNotFoundException();
+    userRepository.delete(optionalUser.get());
   }
 }
