@@ -158,6 +158,22 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		<profile>
+			<id>tst</id>
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+				<db.url>jdbc:h2:file:${basedir}/data/demo-mobile-api-db-tst</db.url>
+				<db.user>sa</db.user>
+				<db.password>password</db.password>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 
 </project>

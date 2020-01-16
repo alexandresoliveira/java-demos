@@ -1,21 +1,12 @@
 package dev.aleoliv.demomobileapi.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,48 +15,46 @@ import dev.aleoliv.demomobileapi.models.User;
 import dev.aleoliv.demomobileapi.services.UserService;
 
 @RestController
-@RequestMapping(value = "users", produces = {
-    MediaType.APPLICATION_JSON_VALUE })
-public class UserController {
+@RequestMapping(value = "users")
+public class UserController implements Controller<User> {
 
-  @Autowired
-  UserService userService;
+  private final UserService userService;
 
-  @GetMapping
-  @ResponseStatus(code = HttpStatus.OK)
-  public @ResponseBody List<User> index() {
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
+
+  @Override
+  public List<User> index(Map<String, Object> params) {
     return userService.all();
   }
 
-  @GetMapping(path = "{id}")
-  @ResponseStatus(code = HttpStatus.OK)
-  public @ResponseBody User show(@PathVariable("id") Long id) {
+  @Override
+  public User show(Long id) {
     try {
       return userService.find(id);
     } catch (UserNotFoundException e) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e);
+      throw new ResponseStatusException(HttpStatus.NO_CONTENT, "User Not Found", e);
     }
   }
 
-  @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
-  @ResponseStatus(code = HttpStatus.CREATED)
-  public @ResponseBody User save(@Valid @RequestBody User user) {
-    return userService.save(user);
+  @Override
+  public User store(@Valid User model) {
+    return userService.save(model);
   }
 
-  @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
-  @ResponseStatus(code = HttpStatus.ACCEPTED)
-  public @ResponseBody User update(@Valid @RequestBody User user) {
-    return userService.update(user);
+  @Override
+  public User update(@Valid User model) {
+    return userService.update(model);
   }
 
-  @DeleteMapping(path = "{id}")
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable("id") Long id) {
+  @Override
+  public void delete(Long id) {
     try {
       userService.delete(id);
     } catch (UserNotFoundException e) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e);
+      throw new ResponseStatusException(HttpStatus.NO_CONTENT, "User Not Found", e);
     }
   }
+
 }

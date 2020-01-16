@@ -22,7 +22,7 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 @Data
-abstract class Base implements Serializable {
+public abstract class Base implements Serializable {
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "created_at", nullable = false, updatable = false)
